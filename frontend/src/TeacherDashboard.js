@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
-import { QrReader } from 'react-qr-reader';
 import axios from 'axios';
+import { QrReader } from 'react-qr-reader';
 
 const TeacherDashboard = () => {
-  const [attendanceRecorded, setAttendanceRecorded] = useState(false);
+  const [attendanceMessage, setAttendanceMessage] = useState('');
+  const [scanningEnabled, setScanningEnabled] = useState(true); 
+  const scannedStudentIds = [];
 
   const handleScan = async (data) => {
-    if (data) {
+    if (scanningEnabled && data) {
+      console.log('Scanning disabled');
       const { studentId, date } = extractDataFromQR(data);
-      try {
-        console.log('Attendance marked successfully:', studentId, date);
-        setAttendanceRecorded(true);
-      } catch (error) {
-        console.error('Error marking attendance:', error);
+      if (studentId && date) {
+        if (!scannedStudentIds.includes(studentId)) {
+          scannedStudentIds.push(studentId); 
+          try {
+            await markAttendance(studentId, date);
+            console.log('Attendance marked successfully:', studentId, date);
+            setAttendanceMessage(`Attendance marked successfully for student ID: ${studentId}`);
+            setScanningEnabled(false);
+            setTimeout(() => setScanningEnabled(true), 5000); 
+          } catch (error) {
+            console.error('Error marking attendance:', error);
+          }
+        } else {
+          console.log('Student ID already scanned:', studentId);
+          setAttendanceMessage(`Student ID ${studentId} already scanned`);
+        }
       }
     }
   };
@@ -23,10 +37,10 @@ const TeacherDashboard = () => {
 
   const extractDataFromQR = (data) => {
     try {
-      console.log("data ===", data)
       const [studentIdData, dateData] = data.text.split('&');
       const studentId = studentIdData.split('=')[1];
       const date = dateData.split('=')[1];
+      console.log(`Extracted student ID and date: ${studentId} ${date}`);
       return { studentId, date };
     } catch (error) {
       console.error('Error extracting data from QR code:', error);
@@ -34,20 +48,24 @@ const TeacherDashboard = () => {
     }
   };
 
+  const markAttendance = async (studentId, date) => {
+    try {
+      await axios.post('http://localhost:5000/markAttendance', { studentId, date, status: 'present' });
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return (
     <div>
       <h1>Teacher Dashboard</h1>
       <QrReader
-        delay={300}
+        delay={300} 
         onError={handleError}
-        onResult={handleScan}
+        onResult={handleScan} 
         style={{ width: '100%' }}
       />
-      {attendanceRecorded && (
-        <div style={{ marginTop: '20px', color: 'green' }}>
-          Attendance recorded for today!
-        </div>
-      )}
+      {attendanceMessage && <p>{attendanceMessage}</p>}
     </div>
   );
 };

@@ -4,9 +4,11 @@ import QRCode from 'qrcode.react';
 const QRCodeGenerator = () => {
   const [studentId, setStudentId] = useState('');
   const [qrCodeData, setQRCodeData] = useState('');
+
   const generateQRCodeData = () => {
     const currentDate = new Date().toISOString().slice(0, 10);
-    const qrData = `studentId=${studentId}&date=${currentDate}`;
+    const status = 'present'; 
+    const qrData = `studentId=${studentId}&date=${currentDate}&status=${status}`;
     setQRCodeData(qrData);
   };
 
@@ -31,3 +33,5 @@ const QRCodeGenerator = () => {
 };
 
 export default QRCodeGenerator;
+
+

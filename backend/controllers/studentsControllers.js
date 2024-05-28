@@ -1,24 +1,25 @@
 
 const Attendance= require('../models/Attendance'); 
+const Student= require('../models/student')
 
-const getWeeklyAttendance =async (req, res) => {//'/getWeeklyAttendance' POST
+const getWeeklyAttendance =async (req, res) => {
     try {
-      const { studentId } = req.body;
-  
-      if (!studentId) {
-        return res.status(400).json({ error: 'Student ID is required' });
+      const decoded = req.user
+      const student = await Student.findById(decoded.userId);
+      if (!student) {
+        return res.status(403).json({ message: 'Student not found' });
       }
-  
+      const studentId = student._id
+
       const today = new Date();
       const dayOfWeek = today.getUTCDay();
       const startOfWeek = new Date(today);
-      //startOfWeek.setUTCDate(today.getUTCDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)); // starting from Monday
-      startOfWeek.setUTCDate(today.getUTCDate() - dayOfWeek);//starting from Sunday
-      startOfWeek.setUTCHours(0, 0, 0, 0); // Setting to midnight
+      startOfWeek.setUTCDate(today.getUTCDate() - dayOfWeek);
+      startOfWeek.setUTCHours(0, 0, 0, 0);
   
       const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setUTCDate(startOfWeek.getUTCDate() + 6); // Setting to end of Sunday
-      endOfWeek.setUTCHours(23, 59, 59, 999); // End of the day
+      endOfWeek.setUTCDate(startOfWeek.getUTCDate() + 6);
+      endOfWeek.setUTCHours(23, 59, 59, 999);
   
       const attendanceRecord = await Attendance.findOne();
   
@@ -47,8 +48,9 @@ const getWeeklyAttendance =async (req, res) => {//'/getWeeklyAttendance' POST
         }
       });
   
-      res.status(200).json({ studentId, weeklyAttendance });
+      res.status(200).json({ weeklyAttendance });
     } catch (error) {
+      console.log(error)
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };

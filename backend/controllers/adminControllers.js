@@ -1,8 +1,14 @@
 const Attendance= require('../models/Attendance'); 
-const markAttendance =  async (req, res) => {//'/markAttendance' POST
+const Admin = require('../models/admin')
+const Student = require('../models/student')
+const markAttendance =  async (req, res) => {
   try {
     const { studentId, date, status } = req.body;
-    console.log(status)
+    const decoded = req.user
+    const admin = await Admin.findById(decoded.userId);
+    if (!admin) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
 
     let attendanceRecord = await Attendance.findOne();
     if (!attendanceRecord) {
@@ -42,13 +48,17 @@ const markAttendance =  async (req, res) => {//'/markAttendance' POST
 };
 
 
-const getAllAttendance = async (req, res) => {//'/getAllAttendance' POST
+const getAllAttendance = async (req, res) => {
   try {
+    const decoded = req.user
+    const admin = await Admin.findById(decoded.userId);
+    if (!admin) {
+      return res.status(403).json({ message: 'Only admins can access the record' });
+    }
     const attendanceRecords = await Attendance.findOne();
     if (!attendanceRecords) {
       return res.status(404).json({ error: 'No attendance records found' });
     }
-    // Converting Map to plain object
     const attendanceObject = Object.fromEntries(attendanceRecords.studentAttendance);
     console.log(attendanceObject)
     res.status(200).json(attendanceObject);
@@ -57,9 +67,15 @@ const getAllAttendance = async (req, res) => {//'/getAllAttendance' POST
   }
 }
 
-const updateAttendance = async (req, res) => {//'/updateAttendance' PATCH
+const updateAttendance = async (req, res) => {
   try {
     const { studentId, date, status } = req.body;
+
+    const decoded = req.user
+    const admin = await Admin.findById(decoded.userId);
+    if (!admin) {
+      return res.status(403).json({ message: 'Only admins can update attendance' });
+    }
 
     let attendanceRecord = await Attendance.findOne();
     if (!attendanceRecord) {
@@ -100,12 +116,7 @@ const updateAttendance = async (req, res) => {//'/updateAttendance' PATCH
 const createStudent =  async (req, res) => {
   const { username, password } = req.body;
   try {
-    const token = req.header('Authorization');
-    if (!token) {
-      return res.status(401).json({ message: 'Access denied. No token provided' });
-    }
-    const decoded = jwt.verify(token, 'secret');
-
+    const decoded = req.user
     const admin = await Admin.findById(decoded.userId);
     if (!admin) {
       return res.status(403).json({ message: 'Only admins can create users' });

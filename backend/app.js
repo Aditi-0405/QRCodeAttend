@@ -8,10 +8,10 @@ const atlasUri = process.env.MONGO_URI;
 const studentsRoutes = require('./routes/students-routes')
 const adminRoutes = require('./routes/admin-routes')
 const authRoutes = require('./routes/auth-routes')
+const {isAuthenticated} = require('./auth/authenticate')
 
 
 const app = express();
-const router = express.Router();
 app.use(bodyParser.json());
 
 
@@ -40,8 +40,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/login', authRoutes)
-app.use('/api/student', studentsRoutes)
-app.use('/api/admin', adminRoutes)
+app.use('/api/student',isAuthenticated, studentsRoutes)
+app.use('/api/admin', isAuthenticated, adminRoutes)
 
 
 

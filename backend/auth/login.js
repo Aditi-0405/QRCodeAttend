@@ -1,12 +1,10 @@
-// routes/auth.js
-const express = require('express');
-const router = express.Router();
+
 const jwt = require('jsonwebtoken');
+
 const Admin = require('../models/admin');
 const Student = require('../models/student');
 
-// Admin Login
-router.post('/admin/login', async (req, res) => {
+const adminLogin = async (req, res) => {
     const { username, password } = req.body;
     try {
         const admin = await Admin.findOne({ username });
@@ -18,10 +16,9 @@ router.post('/admin/login', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
-});
+}
 
-// Student Login
-router.post('/student/login', async (req, res) => {
+const studentLogin = async (req, res) => {
     const { email, password } = req.body;
     try {
         const student = await Student.findOne({ email });
@@ -33,6 +30,6 @@ router.post('/student/login', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
-});
+}
 
-module.exports = router;
+module.exports = {adminLogin, studentLogin}

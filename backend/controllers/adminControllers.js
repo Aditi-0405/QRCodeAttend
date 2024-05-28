@@ -3,6 +3,7 @@ const Admin = require('../models/admin')
 const Student = require('../models/student')
 const markAttendance =  async (req, res) => {
   try {
+    console.log("entereddddd")
     const { studentId, date, status } = req.body;
     const decoded = req.user
     const admin = await Admin.findById(decoded.userId);

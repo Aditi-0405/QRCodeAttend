@@ -9,8 +9,7 @@ const getWeeklyAttendance =async (req, res) => {
       if (!student) {
         return res.status(403).json({ message: 'Student not found' });
       }
-      const studentId = student._id
-
+      const studentId = student._id.toString();
       const today = new Date();
       const dayOfWeek = today.getUTCDay();
       const startOfWeek = new Date(today);
@@ -22,7 +21,6 @@ const getWeeklyAttendance =async (req, res) => {
       endOfWeek.setUTCHours(23, 59, 59, 999);
   
       const attendanceRecord = await Attendance.findOne();
-  
       if (!attendanceRecord || !attendanceRecord.studentAttendance.has(studentId)) {
         return res.status(404).json({ error: 'Student ID not found' });
       }

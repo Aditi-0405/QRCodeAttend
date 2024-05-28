@@ -9,11 +9,11 @@ const studentsRoutes = require('./routes/students-routes')
 const adminRoutes = require('./routes/admin-routes')
 const authRoutes = require('./routes/auth-routes')
 const {isAuthenticated} = require('./auth/authenticate')
-
+const cors = require('cors');
 
 const app = express();
 app.use(bodyParser.json());
-
+app.use(cors());
 
 mongoose.connect(atlasUri, {
   useNewUrlParser: true,
@@ -28,16 +28,6 @@ mongoose.connect(atlasUri, {
   .catch((error) => {
     console.error('Error connecting to MongoDB Atlas:', error);
   });
-
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  );
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
-  next();
-});
 
 app.use('/api/login', authRoutes)
 app.use('/api/student',isAuthenticated, studentsRoutes)

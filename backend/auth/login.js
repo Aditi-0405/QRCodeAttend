@@ -19,15 +19,16 @@ const adminLogin = async (req, res) => {
 }
 
 const studentLogin = async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     try {
-        const student = await Student.findOne({ email });
+        const student = await Student.findOne({ username });
         if (!student || !await student.comparePassword(password)) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
         const token = jwt.sign({ userId: student._id, role: 'student' }, 'secret', { expiresIn: '1h' });
         res.json({ token });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }

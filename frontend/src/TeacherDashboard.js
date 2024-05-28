@@ -1,11 +1,13 @@
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { QrReader } from 'react-qr-reader';
 
 const TeacherDashboard = () => {
   const [attendanceMessage, setAttendanceMessage] = useState('');
-  const [scanningEnabled, setScanningEnabled] = useState(true); 
+  const [scanningEnabled, setScanningEnabled] = useState(true);
   const scannedStudentIds = [];
+  const token = ''; 
 
   const handleScan = async (data) => {
     if (scanningEnabled && data) {
@@ -13,13 +15,13 @@ const TeacherDashboard = () => {
       const { studentId, date } = extractDataFromQR(data);
       if (studentId && date) {
         if (!scannedStudentIds.includes(studentId)) {
-          scannedStudentIds.push(studentId); 
+          scannedStudentIds.push(studentId);
           try {
             await markAttendance(studentId, date);
             console.log('Attendance marked successfully:', studentId, date);
             setAttendanceMessage(`Attendance marked successfully for student ID: ${studentId}`);
             setScanningEnabled(false);
-            setTimeout(() => setScanningEnabled(true), 5000); 
+            setTimeout(() => setScanningEnabled(true), 5000);
           } catch (error) {
             console.error('Error marking attendance:', error);
           }
@@ -50,7 +52,15 @@ const TeacherDashboard = () => {
 
   const markAttendance = async (studentId, date) => {
     try {
-      await axios.post('http://localhost:5000/markAttendance', { studentId, date, status: 'present' });
+      await axios.post(
+        'http://localhost:5000/api/admin/markAttendance',
+        { studentId, date, status: 'present' },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}` 
+          }
+        }
+      );
     } catch (error) {
       throw error;
     }
@@ -60,9 +70,9 @@ const TeacherDashboard = () => {
     <div>
       <h1>Teacher Dashboard</h1>
       <QrReader
-        delay={300} 
+        delay={300}
         onError={handleError}
-        onResult={handleScan} 
+        onResult={handleScan}
         style={{ width: '100%' }}
       />
       {attendanceMessage && <p>{attendanceMessage}</p>}

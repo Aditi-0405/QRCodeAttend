@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 
-const AdminLogin = () => {
+const AdminLogin = ({setIsLoggedIn}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -12,9 +12,8 @@ const AdminLogin = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:5000/api/login/admin', { username, password });
-      
       localStorage.setItem('token', response.data.token);
-      console.log(response.data.token)
+      setIsLoggedIn(true)
       navigate('/admin');
     } catch (err) {
       setError('Invalid username or password');

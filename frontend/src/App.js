@@ -37,10 +37,10 @@ const App = () => {
         <div className="app-content">
           <Routes>
             <Route path="/" element={!isLoggedIn && <HomePage />} />
-            <Route path="/student-login" element={<StudentLogin setIsLoggedIn={setIsLoggedIn} />} />
-            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/student-login" element={!isLoggedIn && <StudentLogin setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/admin-login" element={!isLoggedIn && <AdminLogin setIsLoggedIn={setIsLoggedIn}/>} />
             <Route path="/student" element={isLoggedIn && <StudentPage />} />
-            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin" element={isLoggedIn && <AdminPage />} />
           </Routes>
         </div>
       </div>

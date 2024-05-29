@@ -1,0 +1,40 @@
+.homepage-container {
+    text-align: center;
+    margin-top: 50px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .homepage-title {
+    font-size: 2.5em;
+    color: #333;
+  }
+  
+  .homepage-description {
+    margin: 20px 0;
+    font-size: 1.2em;
+    color: #666;
+  }
+  
+  .homepage-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .homepage-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  
+  .homepage-button:hover {
+    background-color: #0056b3;
+  }
+  

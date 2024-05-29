@@ -21,6 +21,7 @@ const getWeeklyAttendance =async (req, res) => {
       endOfWeek.setUTCHours(23, 59, 59, 999);
   
       const attendanceRecord = await Attendance.findOne();
+      console.log(studentId)
       if (!attendanceRecord || !attendanceRecord.studentAttendance.has(studentId)) {
         return res.status(404).json({ error: 'Student ID not found' });
       }

@@ -26,7 +26,7 @@ const studentLogin = async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
         const token = jwt.sign({ userId: student._id, role: 'student' }, 'secret', { expiresIn: '1h' });
-        res.json({ token });
+        res.json({ token, userId: student._id });
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: 'Internal Server Error' });

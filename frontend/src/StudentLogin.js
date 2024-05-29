@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css'; 
 
-const StudentLogin = () => {
+const StudentLogin = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,9 +14,9 @@ const StudentLogin = () => {
       const response = await axios.post('http://localhost:5000/api/login/student', { username, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);
+      setIsLoggedIn(true);
       navigate('/student');
     } catch (err) {
-      console.log(error)
       setError('Invalid username or password');
     }
   };

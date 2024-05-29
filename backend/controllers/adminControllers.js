@@ -1,9 +1,8 @@
-const Attendance= require('../models/Attendance'); 
+const Attendance = require('../models/Attendance');
 const Admin = require('../models/admin')
 const Student = require('../models/student')
-const markAttendance =  async (req, res) => {
+const markAttendance = async (req, res) => {
   try {
-    console.log("entereddddd")
     const { studentId, date, status } = req.body;
     const decoded = req.user
     const admin = await Admin.findById(decoded.userId);
@@ -56,14 +55,53 @@ const getAllAttendance = async (req, res) => {
     if (!admin) {
       return res.status(403).json({ message: 'Only admins can access the record' });
     }
-    const attendanceRecords = await Attendance.findOne();
-    if (!attendanceRecords) {
+    const attendanceRecord = await Attendance.findOne();
+    if (!attendanceRecord) {
       return res.status(404).json({ error: 'No attendance records found' });
     }
-    const attendanceObject = Object.fromEntries(attendanceRecords.studentAttendance);
-    console.log(attendanceObject)
+    const defaultAttendance = {};
+    const today = new Date();
+    const dayOfWeek = today.getUTCDay();
+    const startOfWeek = new Date(today);
+    startOfWeek.setUTCDate(today.getUTCDate() - dayOfWeek);
+    startOfWeek.setUTCHours(0, 0, 0, 0);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setUTCDate(startOfWeek.getUTCDate() + 6);
+    endOfWeek.setUTCHours(23, 59, 59, 999);
+
+    for (let i = 0; i < 7; i++) {
+      const currentDay = new Date(startOfWeek);
+      currentDay.setUTCDate(startOfWeek.getUTCDate() + i);
+
+      if (currentDay > today) {
+        defaultAttendance[currentDay.toISOString().split('T')[0]] = 'N/A';
+      } else {
+        defaultAttendance[currentDay.toISOString().split('T')[0]] = 'absent';
+      }
+    }
+    const students = await Student.find();
+    const attendanceObject = {}
+    students.forEach(student => {
+      const studentId = student._id.toString();
+      if (!attendanceRecord.studentAttendance.has(studentId)) {
+        attendanceObject[studentId] = defaultAttendance
+      }
+      else {
+        let weeklyAttendance = JSON.parse(JSON.stringify(defaultAttendance));
+        const studentAttendance = attendanceRecord.studentAttendance.get(studentId);
+        studentAttendance.forEach(record => {
+          const recordDate = record.date.toISOString().split('T')[0];
+          if (weeklyAttendance.hasOwnProperty(recordDate)) {
+            weeklyAttendance[recordDate] = record.status;
+          }
+        });
+        attendanceObject[studentId] = weeklyAttendance
+      }
+    })
     res.status(200).json(attendanceObject);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
@@ -114,7 +152,7 @@ const updateAttendance = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
-const createStudent =  async (req, res) => {
+const createStudent = async (req, res) => {
   const { username, password } = req.body;
   try {
     const decoded = req.user
@@ -132,4 +170,4 @@ const createStudent =  async (req, res) => {
   }
 }
 
-module.exports = { markAttendance,getAllAttendance ,updateAttendance, createStudent};
+module.exports = { markAttendance, getAllAttendance, updateAttendance, createStudent };

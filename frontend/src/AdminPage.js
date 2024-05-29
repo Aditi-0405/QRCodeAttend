@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import './AdminPage.css';
 
 const AdminPage = () => {
   const [attendanceData, setAttendanceData] = useState(null);
@@ -16,7 +17,16 @@ const AdminPage = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-      setAttendanceData(response.data);
+
+      if (typeof response.data === 'object' && response.data !== null) {
+        const attendanceArray = Object.entries(response.data).map(([studentId, attendanceObj]) => {
+          return { studentId, ...attendanceObj };
+        });
+        setAttendanceData(attendanceArray);
+      } else {
+        setAttendanceData([]);
+        setError('Invalid attendance data format');
+      }
       setLoading(false);
     } catch (error) {
       setError('Error fetching attendance data');
@@ -42,7 +52,26 @@ const AdminPage = () => {
           {attendanceData && (
             <div className="attendance-data">
               <h2>All Attendance Records</h2>
-              <pre>{JSON.stringify(attendanceData, null, 2)}</pre>
+              <table className="attendance-table">
+                <thead>
+                  <tr>
+                    <th>Student ID</th>
+                    {Object.keys(attendanceData[0]).filter(key => key !== 'studentId').map(date => (
+                      <th key={date}>{date}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {attendanceData.map((record) => (
+                    <tr key={record.studentId}>
+                      <td>{record.studentId}</td>
+                      {Object.values(record).filter((value, index) => index !== 0).map((value, index) => (
+                        <td key={index}>{value}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>

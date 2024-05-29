@@ -30,9 +30,7 @@ const markAttendance = async (req, res) => {
     if (existingRecordIndex !== -1) {
       studentAttendance[existingRecordIndex].status = status;
     } else {
-      console.log("studentAtten", studentAttendance)
       studentAttendance.push({ date: new Date(date), status });
-      console.log("studentAtten", studentAttendance)
     }
 
     await attendanceRecord.save();

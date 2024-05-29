@@ -1,83 +1,54 @@
-
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { QrReader } from 'react-qr-reader';
 
-const TeacherDashboard = () => {
-  const [attendanceMessage, setAttendanceMessage] = useState('');
-  const [scanningEnabled, setScanningEnabled] = useState(true);
-  const scannedStudentIds = [];
-  const token = ''; 
+const AdminPage = () => {
+  const [attendanceData, setAttendanceData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleScan = async (data) => {
-    if (scanningEnabled && data) {
-      console.log('Scanning disabled');
-      const { studentId, date } = extractDataFromQR(data);
-      if (studentId && date) {
-        if (!scannedStudentIds.includes(studentId)) {
-          scannedStudentIds.push(studentId);
-          try {
-            await markAttendance(studentId, date);
-            console.log('Attendance marked successfully:', studentId, date);
-            setAttendanceMessage(`Attendance marked successfully for student ID: ${studentId}`);
-            setScanningEnabled(false);
-            setTimeout(() => setScanningEnabled(true), 5000);
-          } catch (error) {
-            console.error('Error marking attendance:', error);
-          }
-        } else {
-          console.log('Student ID already scanned:', studentId);
-          setAttendanceMessage(`Student ID ${studentId} already scanned`);
-        }
-      }
-    }
-  };
-
-  const handleError = (error) => {
-    console.error('QR code scan error:', error);
-  };
-
-  const extractDataFromQR = (data) => {
+  const fetchAttendanceData = async () => {
+    setLoading(true);
+    setError('');
     try {
-      const [studentIdData, dateData] = data.text.split('&');
-      const studentId = studentIdData.split('=')[1];
-      const date = dateData.split('=')[1];
-      console.log(`Extracted student ID and date: ${studentId} ${date}`);
-      return { studentId, date };
-    } catch (error) {
-      console.error('Error extracting data from QR code:', error);
-      return { studentId: null, date: null };
-    }
-  };
-
-  const markAttendance = async (studentId, date) => {
-    try {
-      await axios.post(
-        'http://localhost:5000/api/admin/markAttendance',
-        { studentId, date, status: 'present' },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}` 
-          }
+      const response = await axios.get('http://localhost:5000/api/admin/getAllAttendance', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-      );
+      });
+      setAttendanceData(response.data);
+      setLoading(false);
     } catch (error) {
-      throw error;
+      setError('Error fetching attendance data');
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Teacher Dashboard</h1>
-      <QrReader
-        delay={300}
-        onError={handleError}
-        onResult={handleScan}
-        style={{ width: '100%' }}
-      />
-      {attendanceMessage && <p>{attendanceMessage}</p>}
+    <div className="admin-page-container">
+      <nav className="admin-nav">
+        <ul className="nav-list">
+          <li className="nav-item">
+            <Link to="/teacher-dashboard" className="nav-link">Teacher Dashboard</Link>
+          </li>
+        </ul>
+      </nav>
+      <div className="admin-content">
+        <div className="attendance-section">
+          <button onClick={fetchAttendanceData} disabled={loading} className="fetch-attendance-button">
+            {loading ? 'Loading...' : 'Get All Attendance'}
+          </button>
+          {error && <p className="error-message">{error}</p>}
+          {attendanceData && (
+            <div className="attendance-data">
+              <h2>All Attendance Records</h2>
+              <pre>{JSON.stringify(attendanceData, null, 2)}</pre>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
-export default TeacherDashboard;
+export default AdminPage;

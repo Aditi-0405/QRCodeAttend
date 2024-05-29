@@ -14,6 +14,7 @@ const StudentLogin = ({ setIsLoggedIn }) => {
       const response = await axios.post('http://localhost:5000/api/login/student', { username, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);
+      localStorage.setItem('role', 'student');
       setIsLoggedIn(true);
       navigate('/student');
     } catch (err) {

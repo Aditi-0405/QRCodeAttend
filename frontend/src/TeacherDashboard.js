@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import { QrReader } from 'react-qr-reader';
@@ -7,7 +6,6 @@ const TeacherDashboard = () => {
   const [attendanceMessage, setAttendanceMessage] = useState('');
   const [scanningEnabled, setScanningEnabled] = useState(true);
   const scannedStudentIds = [];
-  const token = ''; 
 
   const handleScan = async (data) => {
     if (scanningEnabled && data) {
@@ -57,7 +55,7 @@ const TeacherDashboard = () => {
         { studentId, date, status: 'present' },
         {
           headers: {
-            'Authorization': `Bearer ${token}` 
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );

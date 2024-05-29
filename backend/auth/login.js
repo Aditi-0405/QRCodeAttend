@@ -12,7 +12,7 @@ const adminLogin = async (req, res) => {
             return res.status(401).json({ message: 'Invalid username or password' });
         }
         const token = jwt.sign({ userId: admin._id, role: 'admin' }, 'secret', { expiresIn: '1h' });
-        res.json({ token });
+        res.json({ token, userId: admin._id });
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error' });
     }

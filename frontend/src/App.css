@@ -33,3 +33,60 @@
 .app-content {
   padding: 20px;
 }
+
+
+
+/* App.css */
+.admin-page-container {
+  display: flex;
+}
+
+.admin-nav {
+  width: 200px;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+.admin-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-item {
+  margin-bottom: 10px;
+}
+
+
+.attendance-section {
+  margin-top: 20px;
+}
+
+.fetch-attendance-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.fetch-attendance-button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.attendance-data {
+  margin-top: 20px;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+}

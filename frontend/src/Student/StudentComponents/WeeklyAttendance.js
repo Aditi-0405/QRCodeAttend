@@ -1,8 +1,5 @@
-
 import React, { useState } from 'react';
 import axios from 'axios';
-
-
 
 const StudentDashboard = () => {
     const [studentId, setStudentId] = useState('');
@@ -29,9 +26,9 @@ const StudentDashboard = () => {
         />
         <button onClick={fetchWeeklyAttendance}>Fetch Weekly Attendance</button>
         {weeklyAttendance.length > 0 && (
-          <div style={{ marginTop: '20px' }}>
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
             <h2>Weekly Attendance</h2>
-            <ul>
+            <ul style={{ listStyleType: 'none', padding: 0, margin: 'auto', width: 'fit-content' }}>
               {weeklyAttendance.map((record, index) => (
                 <li key={index}>
                   {new Date(record.date).toLocaleDateString()}: {record.status}
@@ -42,6 +39,6 @@ const StudentDashboard = () => {
         )}
       </div>
     );
-  };
+};
 
-  export default StudentDashboard;
+export default StudentDashboard;

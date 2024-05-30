@@ -52,6 +52,13 @@ const AllStudents = () => {
     }
   };
 
+  const confirmDelete = (studentId) => {
+    const confirmed = window.confirm('Are you sure you want to delete this student?');
+    if (confirmed) {
+      handleDelete(studentId);
+    }
+  };
+
   return (
     <div className="all-students-container">
       <h1>All Students</h1>
@@ -60,7 +67,8 @@ const AllStudents = () => {
         {students.map((student) => (
           <li key={student._id} className="student-item">
             <span>{student._id} : {student.username}</span>
-            <button className="delete-student-button" onClick={() => handleDelete(student._id)}>Delete</button>
+            <button className="see-attendance-button" onClick={() => navigate(`/see-attendance/${student._id}`)}>See Attendance</button>
+            <button className="delete-student-button" onClick={() => confirmDelete(student._id)}>Delete</button>
           </li>
         ))}
       </ul>

@@ -45,7 +45,7 @@ const GetAllAttendance = () => {
             ) : (
                 attendanceData && (
                     <div className="attendance-data">
-                        <h2>All Attendance Records</h2>
+                        <h1 style = {{textAlign:'center'}}>Attendance Record</h1>
                         <table className="attendance-table">
                             <thead>
                                 <tr>

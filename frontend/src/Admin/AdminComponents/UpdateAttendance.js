@@ -6,7 +6,7 @@ const UpdateAttendance = () => {
   const [formData, setFormData] = useState({
     studentId: '',
     date: '',
-    status: ''
+    status: '' 
   });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -16,16 +16,22 @@ const UpdateAttendance = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch('http://localhost:5000/api/admin/updateAttendance', formData, {
+      const response = await axios.patch('http://localhost:5000/api/admin/updateAttendance', formData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-      setMessage('Attendance updated successfully');
+      console.log(response.data)
+      setMessage(`Attendance updated successfully for ${response.data.student._id}`);
       setError('');
+      setTimeout(() => {
+        setMessage('');
+        setFormData({ studentId: '', date: '', status: '' });
+      }, 5000); 
     } catch (error) {
       console.log(error)
       setError('Error updating attendance');
@@ -47,7 +53,11 @@ const UpdateAttendance = () => {
         </div>
         <div className="form-group">
           <label>Status:</label>
-          <input type="text" name="status" value={formData.status} onChange={handleChange} />
+          <select name="status" value={formData.status} onChange={handleChange}>
+            <option value="">Select status</option>
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+          </select>
         </div>
         <button type="submit" className="form-button">Update Attendance</button>
       </form>

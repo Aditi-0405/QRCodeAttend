@@ -11,6 +11,7 @@ import GetAllAttendance from './Admin/AdminComponents/GetAllAttendance';
 import AllStudents from './Admin/AdminComponents/AllStudents';
 import UpdateAttendance from './Admin/AdminComponents/UpdateAttendance';
 import CreateStudent from './Admin/AdminComponents/CreateStudent';
+import StudentAttendance from './Shared/SharedComponents/StudentAttendance';
 
 import './App.css';
 
@@ -61,6 +62,7 @@ const App = () => {
           <Route path="/update-attendance" element={isLoggedIn && userRole === 'admin' && <UpdateAttendance />} />
           <Route path="/all-students" element={isLoggedIn&& userRole==='admin' && <AllStudents />} />
           <Route path="/create-student" element={isLoggedIn && userRole === 'admin' && <CreateStudent />} />
+          <Route path="/see-attendance/:studentId" element={isLoggedIn && userRole==='admin'&& <StudentAttendance />} />
         </Routes>
       </div>
     </div>

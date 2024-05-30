@@ -35,9 +35,9 @@ const CreateStudent = () => {
       const studentId = response.data.newUser._id;
       setMessage(`Student with ID ${studentId} created successfully`);
       setError('');
-      setFormData({ username: '', email: '', password: '' });
       setTimeout(() => {
         setMessage('');
+        setFormData({ username: '', email: '', password: '' });
       }, 5000); 
     } catch (error) {
       console.log(error)

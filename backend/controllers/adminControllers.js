@@ -146,7 +146,7 @@ const updateAttendance = async (req, res) => {
 
       await attendanceRecord.save();
 
-      res.status(200).json({ message: 'Attendance updated successfully' });
+      res.status(200).json({ message: 'Attendance updated successfully', student });
     }
   } catch (error) {
     console.error('Error updating attendance:', error);
@@ -212,11 +212,69 @@ const deleteStudent = async (req, res) => {
       await attendanceRecord.save();
     }
 
-    res.status(200).json({ message: 'Student deleted successfully' });
+    res.status(200).json({ message: 'Student deleted successfully', student });
   } catch (error) {
     console.error('Error deleting student:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+const getStudentAttendance = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const decoded = req.user;
+    const admin = await Admin.findById(decoded.userId);
 
-module.exports = { markAttendance, getAllAttendance, updateAttendance, createStudent, getAllStudents, deleteStudent };
+    if (!admin) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    let attendanceRecord = await Attendance.findOne();
+    if (!attendanceRecord || !attendanceRecord.studentAttendance) {
+      return res.status(404).json({ message: 'No attendance records found' });
+    }
+
+    const defaultAttendance = [];
+    const today = new Date();
+    const dayOfWeek = today.getUTCDay();
+    const startOfWeek = new Date(today);
+    startOfWeek.setUTCDate(today.getUTCDate() - dayOfWeek);
+    startOfWeek.setUTCHours(0, 0, 0, 0);
+
+    for (let i = 0; i < 7; i++) {
+      const currentDay = new Date(startOfWeek);
+      currentDay.setUTCDate(startOfWeek.getUTCDate() + i);
+
+      if (currentDay > today) {
+        defaultAttendance.push({ date: currentDay.toISOString().split('T')[0], status: 'N/A' });
+      } else {
+        defaultAttendance.push({ date: currentDay.toISOString().split('T')[0], status: 'absent' });
+      }
+    }
+
+    const studentAttendance = attendanceRecord.studentAttendance.get(studentId);
+    if (studentAttendance) {
+      studentAttendance.forEach(record => {
+        const recordDate = record.date.toISOString().split('T')[0];
+        const index = defaultAttendance.findIndex(item => item.date === recordDate);
+        if (index !== -1) {
+          defaultAttendance[index].status = record.status;
+        }
+      });
+    }
+
+    res.status(200).json({ studentName: student.username, attendance: defaultAttendance });
+  } catch (error) {
+    console.error('Error fetching attendance:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+
+
+module.exports = { markAttendance, getAllAttendance, updateAttendance, createStudent, getAllStudents, deleteStudent, getStudentAttendance };

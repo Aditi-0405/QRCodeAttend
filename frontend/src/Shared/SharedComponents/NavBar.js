@@ -1,6 +1,6 @@
 
 import {useNavigate, Link } from 'react-router-dom';
-import '../../App.css'
+import '../SharedStyling/NavBar.css'
 
 const NavBar = ({isLoggedIn, setIsLoggedIn})=>{
     const navigate = useNavigate();

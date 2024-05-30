@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './AdminPage.css';
+import '../AdminStyling/AdminPage.css';
 
 const GetAllAttendance = () => {
     const [attendanceData, setAttendanceData] = useState(null);

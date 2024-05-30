@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import QRCode from 'qrcode.react';
 import axios from 'axios';
-import './StudentPage.css'; 
+import '../StudentStyling/StudentPage.css' 
 
 const StudentPage = () => {
   const [qrCodeData, setQRCodeData] = useState('');

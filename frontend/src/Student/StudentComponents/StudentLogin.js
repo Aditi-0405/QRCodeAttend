@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './FormStyles.css'; 
+import '../../Shared/SharedStyling/FormStyles.css'
 
-const AdminLogin = ({ setIsLoggedIn }) => {
+const StudentLogin = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -11,12 +11,12 @@ const AdminLogin = ({ setIsLoggedIn }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login/admin', { username, password });
+      const response = await axios.post('http://localhost:5000/api/login/student', { username, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);
-      localStorage.setItem('role', 'admin');
+      localStorage.setItem('role', 'student');
       setIsLoggedIn(true);
-      navigate('/admin');
+      navigate('/student');
     } catch (err) {
       setError('Invalid username or password');
     }
@@ -24,7 +24,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
 
   return (
     <div className="form-container">
-      <h2>Admin Login</h2>
+      <h2>Student Login</h2>
       {error && <p className="error-message">{error}</p>}
       <div className="form-group">
         <input
@@ -47,4 +47,4 @@ const AdminLogin = ({ setIsLoggedIn }) => {
   );
 };
 
-export default AdminLogin;
+export default StudentLogin;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './AdminPage.css';
+import '../AdminStyling/AdminPage.css';
 
 const AdminPage = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const AdminPage = () => {
       <nav className="admin-nav">
         <ul className="nav-list">
           <li className="nav-item">
-            <button className="nav-button" onClick={() => navigate('/teacher-dashboard')}>Teacher Dashboard</button>
+            <button className="nav-button" onClick={() => navigate('/mark-attendance')}>Mark Attendance</button>
           </li>
           <li className="nav-item">
             <button className="nav-button" onClick={() => navigate('/getAllAttendance')}>Get All Attendance</button>
@@ -28,3 +28,4 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
+

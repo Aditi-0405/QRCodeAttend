@@ -33,3 +33,13 @@
 .app-content {
   padding: 20px;
 }
+.logout-btn {
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #0056b3;
+}
+

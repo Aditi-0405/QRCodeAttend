@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './FormStyles.css'; 
+import '../../Shared/SharedStyling/FormStyles.css'
 
 const UpdateAttendance = () => {
   const [formData, setFormData] = useState({

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { QrReader } from 'react-qr-reader';
-import './TeacherDashboard.css';
+import '../AdminStyling/MarkAttendance.css';
 
-const TeacherDashboard = () => {
+const MarkAttendance = () => {
   const [attendanceMessage, setAttendanceMessage] = useState('');
   const [scanningEnabled, setScanningEnabled] = useState(true);
   const scannedStudentIds = [];
@@ -63,7 +63,7 @@ const TeacherDashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <h1>Teacher Dashboard</h1>
+      <h1 className='heading'>Scan QR</h1>
       <div className="qr-reader-container">
         <QrReader
           delay={300}
@@ -77,4 +77,4 @@ const TeacherDashboard = () => {
   );
 };
 
-export default TeacherDashboard;
+export default MarkAttendance;

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import '../SharedStyling/HomePage.css'
 
@@ -20,4 +20,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Route, Routes, Link, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import HomePage from './Shared/SharedComponents/HomePage';
 import StudentLogin from './Student/StudentComponents/StudentLogin';
@@ -12,44 +12,16 @@ import AllStudents from './Admin/AdminComponents/AllStudents';
 import UpdateAttendance from './Admin/AdminComponents/UpdateAttendance';
 import CreateStudent from './Admin/AdminComponents/CreateStudent';
 import StudentAttendance from './Shared/SharedComponents/StudentAttendance';
-
+import NavBar from './Shared/SharedComponents/NavBar';
 import './App.css';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('userId') !== null);
   const userRole = localStorage.getItem('role');
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem('userId');
-    localStorage.removeItem('role');
-    setIsLoggedIn(false);
-    navigate('/'); 
-  };
 
   return (
     <div className="app-container">
-      <nav className="app-nav">
-        <ul className="nav-list">
-          {!isLoggedIn && <li className="nav-item"><Link to="/" className="nav-link">Home</Link></li>}
-          {!isLoggedIn && <li className="nav-item"><Link to="/student-login" className="nav-link">Student Login</Link></li>}
-          {!isLoggedIn && <li className="nav-item"><Link to="/admin-login" className="nav-link">Admin Login</Link></li>}
-          {isLoggedIn && userRole === 'student' && (
-            <>
-              <li className="nav-item"><Link to="/student" className="nav-link">Home</Link></li>
-              <li className="nav-item"><span className="nav-link">User ID: {localStorage.getItem('userId')}</span></li>
-              <li className="nav-item"><button onClick={handleLogout} className="nav-link logout-btn">Logout</button></li>
-            </>
-          )}
-          {isLoggedIn && userRole === 'admin' && (
-            <>
-              <li className="nav-item"><Link to="/admin" className="nav-link">Home</Link></li>
-              <li className="nav-item"><span className="nav-link">User ID: {localStorage.getItem('userId')}</span></li>
-              <li className="nav-item"><button onClick={handleLogout} className="nav-link logout-btn">Logout</button></li>
-            </>
-          )}
-        </ul>
-      </nav>
+      <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       <div className="app-content">
         <Routes>
           <Route path="/" element={!isLoggedIn && <HomePage />} />

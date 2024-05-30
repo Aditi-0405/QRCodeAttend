@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { QrReader } from 'react-qr-reader';
+import './TeacherDashboard.css';
 
 const TeacherDashboard = () => {
   const [attendanceMessage, setAttendanceMessage] = useState('');
@@ -9,14 +10,12 @@ const TeacherDashboard = () => {
 
   const handleScan = async (data) => {
     if (scanningEnabled && data) {
-      console.log('Scanning disabled');
       const { studentId, date } = extractDataFromQR(data);
       if (studentId && date) {
         if (!scannedStudentIds.includes(studentId)) {
           scannedStudentIds.push(studentId);
           try {
             await markAttendance(studentId, date);
-            console.log('Attendance marked successfully:', studentId, date);
             setAttendanceMessage(`Attendance marked successfully for student ID: ${studentId}`);
             setScanningEnabled(false);
             setTimeout(() => setScanningEnabled(true), 5000);
@@ -24,7 +23,6 @@ const TeacherDashboard = () => {
             console.error('Error marking attendance:', error);
           }
         } else {
-          console.log('Student ID already scanned:', studentId);
           setAttendanceMessage(`Student ID ${studentId} already scanned`);
         }
       }
@@ -40,7 +38,6 @@ const TeacherDashboard = () => {
       const [studentIdData, dateData] = data.text.split('&');
       const studentId = studentIdData.split('=')[1];
       const date = dateData.split('=')[1];
-      console.log(`Extracted student ID and date: ${studentId} ${date}`);
       return { studentId, date };
     } catch (error) {
       console.error('Error extracting data from QR code:', error);
@@ -65,15 +62,17 @@ const TeacherDashboard = () => {
   };
 
   return (
-    <div>
+    <div className="dashboard-container">
       <h1>Teacher Dashboard</h1>
-      <QrReader
-        delay={300}
-        onError={handleError}
-        onResult={handleScan}
-        style={{ width: '100%' }}
-      />
-      {attendanceMessage && <p>{attendanceMessage}</p>}
+      <div className="qr-reader-container">
+        <QrReader
+          delay={300}
+          onError={handleError}
+          onResult={handleScan}
+          style={{ width: '100%' }}
+        />
+      </div>
+      {attendanceMessage && <p className="attendance-message">{attendanceMessage}</p>}
     </div>
   );
 };

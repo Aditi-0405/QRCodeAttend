@@ -1,69 +1,55 @@
 
 .admin-page-container {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .admin-nav {
-    background-color: #f4f4f4;
-    padding: 10px;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 50px;
+  font-family: 'Arial', sans-serif;
+}
+
+.admin-nav {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.nav-list {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nav-button {
+  padding: 20px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #0066cc;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.nav-button:hover {
+  background-color: #005bb5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-button:focus {
+  outline: none;
+  background-color: #004da0;
+}
+
+@media (max-width: 600px) {
   .nav-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
+    grid-template-columns: 1fr;
   }
-  
-  .nav-item {
-    margin-right: 15px;
-  }
- 
-  .nav-link button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: #007bff;
-  }
-  
-  .admin-content {
-    padding: 20px;
-  }
-  
-  .attendance-section {
-    margin-top: 20px;
-  }
-  
-  .fetch-attendance-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .error-message {
-    color: red;
-  }
-  
-  .attendance-data {
-    margin-top: 20px;
-  }
-  
-  .attendance-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .attendance-table th,
-  .attendance-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .attendance-table th {
-    background-color: #f2f2f2;
-  }
-  
+}

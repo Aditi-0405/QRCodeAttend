@@ -113,38 +113,42 @@ const updateAttendance = async (req, res) => {
     if (!admin) {
       return res.status(403).json({ message: 'Only admins can update attendance' });
     }
-
-    let attendanceRecord = await Attendance.findOne();
-    if (!attendanceRecord) {
-      return res.status(404).json({ error: 'No attendance records found' });
+    const student = await Student.findById(studentId);
+    if (!student) {
+      res.status(404).json({ message: 'No student found' });
     }
+    else {
+      let attendanceRecord = await Attendance.findOne();
+      if (!attendanceRecord) {
+        attendanceRecord = new Attendance();
+      }
+  
+      if (!attendanceRecord.studentAttendance) {
+        attendanceRecord.studentAttendance = new Map();
+      }
+      let studentAttendance = attendanceRecord.studentAttendance.get(studentId);
 
-    if (!attendanceRecord.studentAttendance) {
-      attendanceRecord.studentAttendance = new Map();
+      if (!studentAttendance) {
+        studentAttendance = [];
+        attendanceRecord.studentAttendance.set(studentId, studentAttendance);
+      }
+
+
+
+      const existingRecordIndex = studentAttendance.findIndex(record => record.date.toDateString() === new Date(date).toDateString());
+      if (existingRecordIndex !== -1) {
+        studentAttendance[existingRecordIndex].status = status;
+      } else {
+        studentAttendance.push({
+          date: new Date(date),
+          status: status
+        });
+      }
+
+      await attendanceRecord.save();
+
+      res.status(200).json({ message: 'Attendance updated successfully' });
     }
-
-    let studentAttendance = attendanceRecord.studentAttendance.get(studentId);
-    if (!studentAttendance) {
-      studentAttendance = [];
-      attendanceRecord.studentAttendance.set(studentId, studentAttendance);
-    }
-
-    const existingRecordIndex = studentAttendance.findIndex(record => record.date.toDateString() === new Date(date).toDateString());
-    if (existingRecordIndex !== -1) {
-      studentAttendance[existingRecordIndex].status = status;
-    } else {
-      studentAttendance.push({
-        date: new Date(date),
-        status: status
-      });
-    }
-
-    await attendanceRecord.save();
-
-    console.log('Attendance updated successfully');
-    console.log('Updated Attendance Record:', attendanceRecord.toObject());
-
-    res.status(200).json({ message: 'Attendance updated successfully' });
   } catch (error) {
     console.error('Error updating attendance:', error);
     res.status(500).json({ error: 'Internal Server Error' });

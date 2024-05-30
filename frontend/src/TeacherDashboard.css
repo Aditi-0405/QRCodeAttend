@@ -1,0 +1,16 @@
+.dashboard-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .qr-reader-container {
+    margin-top: 20px;
+  }
+  
+  .attendance-message {
+    margin-top: 20px;
+    text-align: center;
+    color: green;
+  }
+  

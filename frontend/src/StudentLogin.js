@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css'; 
+import './FormStyles.css'; 
 
 const StudentLogin = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
@@ -23,24 +23,26 @@ const StudentLogin = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div className="login-container">
-      <h1 className="login-title">Student Login</h1>
-      {error && <p className="login-error">{error}</p>}
-      <input
-        type="text"
-        placeholder="Enter Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="login-input"
-      />
-      <input
-        type="password"
-        placeholder="Enter Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="login-input"
-      />
-      <button onClick={handleLogin} className="login-button">Login</button>
+    <div className="form-container">
+      <h2>Student Login</h2>
+      {error && <p className="error-message">{error}</p>}
+      <div className="form-group">
+        <input
+          type="text"
+          placeholder="Enter Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <input
+          type="password"
+          placeholder="Enter Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <button onClick={handleLogin} className="form-button">Login</button>
     </div>
   );
 };

@@ -6,6 +6,10 @@ import AdminLogin from './AdminLogin';
 import StudentPage from './StudentPage';
 import AdminPage from './AdminPage';
 import TeacherDashboard from './TeacherDashboard';
+import GetAllAttendance from './GetAllAttendance';
+import UpdateAttendance from './UpdateAttendance';
+import CreateStudent from './CreateStudent';
+
 import './App.css';
 
 const App = () => {
@@ -49,8 +53,11 @@ const App = () => {
           <Route path="/student-login" element={!isLoggedIn && <StudentLogin setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/admin-login" element={!isLoggedIn && <AdminLogin setIsLoggedIn={setIsLoggedIn} />} />
           <Route path="/student" element={isLoggedIn && userRole === 'student' && <StudentPage />} />
-          <Route path="/admin/*" element={isLoggedIn && userRole === 'admin' && <AdminPage />} />
+          <Route path="/admin" element={isLoggedIn && userRole === 'admin' && <AdminPage />} />
           <Route path="/teacher-dashboard" element={isLoggedIn && userRole === 'admin' && <TeacherDashboard />} />
+          <Route path="/getAllAttendance" element={isLoggedIn && userRole === 'admin' && <GetAllAttendance />} />
+          <Route path="/update-attendance" element={isLoggedIn && userRole === 'admin' && <UpdateAttendance />} />
+          <Route path="/create-student" element={isLoggedIn && userRole === 'admin' && <CreateStudent />} />
         </Routes>
       </div>
     </div>

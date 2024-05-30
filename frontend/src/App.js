@@ -8,6 +8,7 @@ import StudentPage from './Student/StudentComponents/StudentPage';
 import AdminPage from './Admin/AdminComponents/AdminPage';
 import MarkAttendance from './Admin/AdminComponents/MarkAttendance';
 import GetAllAttendance from './Admin/AdminComponents/GetAllAttendance';
+import AllStudents from './Admin/AdminComponents/AllStudents';
 import UpdateAttendance from './Admin/AdminComponents/UpdateAttendance';
 import CreateStudent from './Admin/AdminComponents/CreateStudent';
 
@@ -58,6 +59,7 @@ const App = () => {
           <Route path="/mark-attendance" element={isLoggedIn && userRole === 'admin' && <MarkAttendance />} />
           <Route path="/getAllAttendance" element={isLoggedIn && userRole === 'admin' && <GetAllAttendance />} />
           <Route path="/update-attendance" element={isLoggedIn && userRole === 'admin' && <UpdateAttendance />} />
+          <Route path="/all-students" element={isLoggedIn&& userRole==='admin' && <AllStudents />} />
           <Route path="/create-student" element={isLoggedIn && userRole === 'admin' && <CreateStudent />} />
         </Routes>
       </div>

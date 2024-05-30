@@ -1,0 +1,18 @@
+.all-students-container {
+    padding: 20px;
+  }
+  
+  .create-student-button {
+    margin-bottom: 20px;
+  }
+  
+  .students-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .student-item {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  

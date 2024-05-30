@@ -122,7 +122,7 @@ const updateAttendance = async (req, res) => {
       if (!attendanceRecord) {
         attendanceRecord = new Attendance();
       }
-  
+
       if (!attendanceRecord.studentAttendance) {
         attendanceRecord.studentAttendance = new Map();
       }
@@ -131,9 +131,8 @@ const updateAttendance = async (req, res) => {
       if (!studentAttendance) {
         studentAttendance = [];
         attendanceRecord.studentAttendance.set(studentId, studentAttendance);
+        studentAttendance = attendanceRecord.studentAttendance.get(studentId);
       }
-
-
 
       const existingRecordIndex = studentAttendance.findIndex(record => record.date.toDateString() === new Date(date).toDateString());
       if (existingRecordIndex !== -1) {
@@ -155,21 +154,69 @@ const updateAttendance = async (req, res) => {
   }
 }
 const createStudent = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: '"username", "email", "password" fields are required' });
+  }
+
   try {
-    const decoded = req.user
+    const decoded = req.user;
     const admin = await Admin.findById(decoded.userId);
+
     if (!admin) {
       return res.status(403).json({ message: 'Only admins can create users' });
     }
-    const newUser = new Student({ username, password });
+
+    const newUser = new Student({ username, email, password });
 
     await newUser.save();
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json({ message: 'User created successfully', newUser });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 }
+const getAllStudents = async (req, res) => {
+  try {
+    const decoded = req.user;
+    const admin = await Admin.findById(decoded.userId);
 
-module.exports = { markAttendance, getAllAttendance, updateAttendance, createStudent };
+    if (!admin) {
+      return res.status(403).json({ message: 'Not Authorized' });
+    }
+    const students = await Student.find();
+    res.status(200).json({ students });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+const deleteStudent = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    const decoded = req.user;
+    const admin = await Admin.findById(decoded.userId);
+
+    if (!admin) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    const student = await Student.findByIdAndDelete(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    let attendanceRecord = await Attendance.findOne();
+    if (attendanceRecord && attendanceRecord.studentAttendance) {
+      attendanceRecord.studentAttendance.delete(studentId);
+      await attendanceRecord.save();
+    }
+
+    res.status(200).json({ message: 'Student deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting student:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+module.exports = { markAttendance, getAllAttendance, updateAttendance, createStudent, getAllStudents, deleteStudent };

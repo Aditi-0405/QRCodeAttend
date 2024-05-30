@@ -4,21 +4,21 @@ import axios from 'axios';
 import '../../Shared/SharedStyling/FormStyles.css'
 
 const StudentLogin = ({ setIsLoggedIn }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login/student', { username, password });
+      const response = await axios.post('http://localhost:5000/api/login/student', { email, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);
       localStorage.setItem('role', 'student');
       setIsLoggedIn(true);
       navigate('/student');
     } catch (err) {
-      setError('Invalid username or password');
+      setError('Invalid email or password');
     }
   };
 
@@ -28,16 +28,16 @@ const StudentLogin = ({ setIsLoggedIn }) => {
       {error && <p className="error-message">{error}</p>}
       <div className="form-group">
         <input
-          type="text"
-          placeholder="Enter Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          placeholder="Your Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
       </div>
       <div className="form-group">
         <input
           type="password"
-          placeholder="Enter Password"
+          placeholder="Your Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

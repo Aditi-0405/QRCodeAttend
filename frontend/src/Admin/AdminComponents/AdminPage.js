@@ -19,7 +19,7 @@ const AdminPage = () => {
             <button className="nav-button" onClick={() => navigate('/update-attendance')}>Update Attendance</button>
           </li>
           <li className="nav-item">
-            <button className="nav-button" onClick={() => navigate('/create-student')}>Create Student</button>
+            <button className="nav-button" onClick={() => navigate('/all-students')}>All Students</button>
           </li>
         </ul>
       </nav>
@@ -28,4 +28,3 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
-

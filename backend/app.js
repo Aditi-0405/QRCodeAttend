@@ -32,8 +32,3 @@ mongoose.connect(atlasUri, {
 app.use('/api/login', authRoutes)
 app.use('/api/student',isAuthenticated, studentsRoutes)
 app.use('/api/admin', isAuthenticated, adminRoutes)
-
-
-
-
-

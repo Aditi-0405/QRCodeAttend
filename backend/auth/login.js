@@ -19,9 +19,9 @@ const adminLogin = async (req, res) => {
 }
 
 const studentLogin = async (req, res) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     try {
-        const student = await Student.findOne({ username });
+        const student = await Student.findOne({ email });
         if (!student || !await student.comparePassword(password)) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }

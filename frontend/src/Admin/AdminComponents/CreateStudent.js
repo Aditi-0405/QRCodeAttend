@@ -5,6 +5,7 @@ import '../../Shared/SharedStyling/FormStyles.css'
 const CreateStudent = () => {
   const [formData, setFormData] = useState({
     username: '',
+    email: '',
     password: ''
   });
   const [message, setMessage] = useState('');
@@ -17,15 +18,29 @@ const CreateStudent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.username || !formData.email || !formData.password) {
+      setError('All fields are required');
+      setMessage('');
+      return;
+    }
+
     try {
-      await axios.post('http://localhost:5000/api/admin/createStudent', formData, {
+      const response = await axios.post('http://localhost:5000/api/admin/createStudent', formData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-      setMessage('Student created successfully');
+      console.log(response.data)
+      const studentId = response.data.newUser._id;
+      setMessage(`Student with ID ${studentId} created successfully`);
       setError('');
+      setFormData({ username: '', email: '', password: '' });
+      setTimeout(() => {
+        setMessage('');
+      }, 5000); 
     } catch (error) {
+      console.log(error)
       setError('Error creating student');
       setMessage('');
     }
@@ -38,6 +53,10 @@ const CreateStudent = () => {
         <div className="form-group">
           <label>Username:</label>
           <input type="text" name="username" value={formData.username} onChange={handleChange} />
+        </div>
+        <div className="form-group">
+          <label>Email:</label>
+          <input type="email" name="email" value={formData.email} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label>Password:</label>

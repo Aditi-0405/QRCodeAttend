@@ -1,6 +1,7 @@
 const Attendance = require('../models/Attendance');
 const Admin = require('../models/admin')
 const Student = require('../models/student')
+const { sendmail } = require('../auth/nodemailer');
 const markAttendance = async (req, res) => {
   try {
     const { studentId, date, status } = req.body;
@@ -169,6 +170,8 @@ const createStudent = async (req, res) => {
 
     const newUser = new Student({ username, email, password });
 
+    await sendmail(username, email, password);
+    
     await newUser.save();
     res.status(201).json({ message: 'User created successfully', newUser });
   } catch (error) {

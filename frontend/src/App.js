@@ -16,7 +16,7 @@ import NavBar from './Shared/SharedComponents/NavBar';
 import './App.css';
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('token') !== null);
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('userId') !== null);
   const userRole = localStorage.getItem('role');
 
   return (

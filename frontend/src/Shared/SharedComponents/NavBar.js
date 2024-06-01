@@ -6,6 +6,7 @@ const NavBar = ({isLoggedIn, setIsLoggedIn})=>{
     const navigate = useNavigate();
     const userRole = localStorage.getItem('role');
     const handleLogout = () => {
+      localStorage.removeItem('token')
       localStorage.removeItem('userId');
       localStorage.removeItem('role');
       localStorage.removeItem('username');

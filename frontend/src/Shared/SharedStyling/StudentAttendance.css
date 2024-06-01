@@ -60,3 +60,9 @@
 .attendance-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+.present{
+  background-color: green;
+}
+.absent{
+  background-color: red;
+}

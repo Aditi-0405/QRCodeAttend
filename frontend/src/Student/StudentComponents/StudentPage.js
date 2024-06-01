@@ -36,7 +36,7 @@ const StudentPage = () => {
       setShowQRCode(false);
     } catch (err) {
       console.error('Error fetching weekly attendance:', err);
-      setError('Failed to fetch weekly attendance');
+      setError('Failed to fetch weekly attendance. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -61,7 +61,7 @@ const StudentPage = () => {
       </div>
       {showQRCode && (
         <div className="qr-code-container">
-          <h1>Your QR</h1>
+          <h2>Your QR Code</h2>
           <QRCode value={qrCodeData} />
         </div>
       )}
@@ -80,7 +80,7 @@ const StudentPage = () => {
                 {Object.entries(weeklyAttendance).map(([date, status], index) => (
                   <tr key={index}>
                     <td>{date}</td>
-                    <td>{status}</td>
+                    <td className={status === 'present' ? 'present' : 'absent'}>{status}</td>
                   </tr>
                 ))}
               </tbody>

@@ -47,6 +47,13 @@
   outline: none;
   background-color: #004da0;
 }
+.present{
+  background-color: green;
+}
+.absent{
+  background-color: red;
+}
+
 
 @media (max-width: 600px) {
   .nav-list {

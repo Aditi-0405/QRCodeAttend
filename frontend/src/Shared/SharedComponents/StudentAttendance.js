@@ -60,7 +60,9 @@ const StudentAttendance = () => {
               {attendance.map((record, index) => (
                 <tr key={index}>
                   <td>{formatDate(record.date)}</td>
-                  <td>{record.status}</td>
+                  <td className={record.status === 'present' ? 'present' : 'absent'}>
+                    {record.status}
+                  </td>
                 </tr>
               ))}
             </tbody>

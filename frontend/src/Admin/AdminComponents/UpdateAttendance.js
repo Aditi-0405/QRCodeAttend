@@ -91,8 +91,8 @@ const UpdateAttendance = () => {
           <label>Status:</label>
           <select name="status" value={formData.status} onChange={handleChange}>
             <option value="">Select status</option>
-            <option value="Present">Present</option>
-            <option value="Absent">Absent</option>
+            <option value="present">present</option>
+            <option value="absent">absent</option>
           </select>
         </div>
         <button type="submit" className="form-button">Update Attendance</button>

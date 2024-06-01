@@ -15,7 +15,7 @@ const GetAllAttendance = () => {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
-console.log(response.data)
+
             if (typeof response.data === 'object' && response.data !== null) {
                 const attendanceArray = Object.entries(response.data).map(([studentId, attendanceObj]) => {
                     return { studentId, ...attendanceObj };
@@ -60,7 +60,9 @@ console.log(response.data)
                                     <tr key={record.studentId}>
                                         <td>{record.studentId}</td>
                                         {Object.values(record).filter((value, index) => index !== 0).map((value, index) => (
-                                            <td key={index}>{value}</td>
+                                            <td key={index} className={value === 'present' ? 'present' : 'absent'}>
+                                                {value}
+                                            </td>
                                         ))}
                                     </tr>
                                 ))}

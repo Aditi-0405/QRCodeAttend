@@ -82,3 +82,9 @@ h1 {
   transition: background-color 0.3s, transform 0.3s; 
 }
 
+.present{
+  background-color: green;
+}
+.absent{
+  background-color: red;
+}

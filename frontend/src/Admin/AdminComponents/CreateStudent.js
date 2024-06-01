@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../../Shared/SharedStyling/FormStyles.css'
+import '../../Shared/SharedStyling/FormStyles.css';
 
 const CreateStudent = () => {
   const [formData, setFormData] = useState({
@@ -31,7 +31,6 @@ const CreateStudent = () => {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       });
-      console.log(response.data)
       const rollNumber = response.data.newUser.rollNumber;
       const username = response.data.newUser.username;
       setMessage(
@@ -47,8 +46,11 @@ const CreateStudent = () => {
         setFormData({ username: '', email: '', password: '' });
       }, 5000); 
     } catch (error) {
-      console.log(error)
-      setError('Error creating student');
+      if (error.response && error.response.status === 401) {
+        setError('Unauthorized access. Please log in again.');
+      } else {
+        setError('Error creating student. Please try again later.');
+      }
       setMessage('');
     }
   };

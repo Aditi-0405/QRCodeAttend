@@ -12,9 +12,11 @@ const UpdateAttendance = () => {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); 
 
   useEffect(() => {
     const fetchStudents = async () => {
+      setLoading(true);
       try {
         const response = await axios.get('http://localhost:5000/api/admin/getAllStudents', {
           headers: {
@@ -27,9 +29,11 @@ const UpdateAttendance = () => {
         }
         setStudents(studentsData);
         setFilteredStudents(studentsData);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching students:', error);
         setError('Error fetching students');
+        setLoading(false);
       }
     };
 
@@ -51,6 +55,7 @@ const UpdateAttendance = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
     try {
       const response = await axios.patch('http://localhost:5000/api/admin/updateAttendance', formData, {
         headers: {
@@ -67,6 +72,7 @@ const UpdateAttendance = () => {
         </>
       ); 
       setError('');
+      setLoading(false); 
       setTimeout(() => {
         setMessage('');
         setFormData({ studentId: '', date: '', status: '' });
@@ -75,6 +81,7 @@ const UpdateAttendance = () => {
       console.error(error);
       setError('Error updating attendance');
       setMessage('');
+      setLoading(false); 
     }
   };
 
@@ -112,6 +119,7 @@ const UpdateAttendance = () => {
         </div>
         <button type="submit" className="form-button">Update Attendance</button>
       </form>
+      {loading && <p>Loading...</p>} 
       {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
     </div>

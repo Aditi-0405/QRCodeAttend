@@ -4,6 +4,8 @@ import '../AdminStyling/AllStudents.css';
 
 const AllStudents = () => {
   const [students, setStudents] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,8 +26,11 @@ const AllStudents = () => {
 
         const data = await response.json();
         setStudents(data.students);
+        setLoading(false);
       } catch (error) {
+        setError('Error fetching students. Please try again later.');
         console.error('Error fetching students:', error);
+        setLoading(false);
       }
     };
 
@@ -48,6 +53,7 @@ const AllStudents = () => {
       }
       setStudents(students.filter(student => student._id !== studentId));
     } catch (error) {
+      setError('Error deleting student. Please try again later.');
       console.error('Error deleting student:', error);
     }
   };
@@ -62,18 +68,24 @@ const AllStudents = () => {
   return (
     <div className="all-students-container">
       <h1>All Students</h1>
-      <button className="create-student-button" onClick={() => navigate('/create-student')}>Create Student</button>
-      <ul className="students-list">
-        {students.map((student) => (
-          <li key={student._id} className="student-item">
-            <span>{student.rollNumber} : {student.username}</span>
-            <div >
-              <button className="see-attendance-button" onClick={() => navigate(`/see-attendance/${student._id}`)}>See Attendance</button>
-              <button className="delete-student-button" onClick={() => confirmDelete(student._id)}>Delete</button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {loading && <p>Loading...</p>} 
+      {error && <p className="error">{error}</p>}
+      {!loading && !error && (
+        <>
+          <button className="create-student-button" onClick={() => navigate('/create-student')}>Create Student</button>
+          <ul className="students-list">
+            {students.map((student) => (
+              <li key={student._id} className="student-item">
+                <span>{student.rollNumber} : {student.username}</span>
+                <div >
+                  <button className="see-attendance-button" onClick={() => navigate(`/see-attendance/${student._id}`)}>See Attendance</button>
+                  <button className="delete-student-button" onClick={() => confirmDelete(student._id)}>Delete</button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 };

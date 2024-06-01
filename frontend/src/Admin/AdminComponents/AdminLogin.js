@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import '../../Shared/SharedStyling/FormStyles.css'
+import '../../Shared/SharedStyling/FormStyles.css';
 
 const AdminLogin = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
@@ -20,7 +20,11 @@ const AdminLogin = ({ setIsLoggedIn }) => {
       setIsLoggedIn(true);
       navigate('/admin');
     } catch (err) {
-      setError('Invalid username or password');
+      if (err.response || err.response.status === 401) {
+        setError('Invalid username or password');
+      } else {
+        setError('We are currently experiencing technical difficulties. Please try again later.');
+      }
     }
   };
 

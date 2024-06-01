@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../Shared/SharedStyling/FormStyles.css'
+import '../../Shared/SharedStyling/FormStyles.css';
 
 const StudentLogin = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
@@ -20,7 +20,11 @@ const StudentLogin = ({ setIsLoggedIn }) => {
       setIsLoggedIn(true);
       navigate('/student');
     } catch (err) {
-      setError('Invalid email or password');
+      if (err.response || err.response.status === 401) {
+        setError('Invalid email or password');
+      } else {
+        setError('We are currently experiencing technical difficulties. Please try again later.');
+      }
     }
   };
 

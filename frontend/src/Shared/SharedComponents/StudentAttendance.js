@@ -79,7 +79,6 @@ const StudentAttendance = () => {
       <h1>Student Attendance</h1>
       <h2>Name: {studentName}</h2>
       <h2>Roll No: {studentRollNumber}</h2>
-      {message && <p className="success-message">{message}</p>}
       {attendance.length > 0 && (
         <div style={{ marginTop: '20px', display: 'inline-block', textAlign: 'left' }}>
           <table className="attendance-table">
@@ -112,6 +111,7 @@ const StudentAttendance = () => {
           </table>
         </div>
       )}
+      {message && <p className="success-message">{message}</p>}
     </div>
   );
 };

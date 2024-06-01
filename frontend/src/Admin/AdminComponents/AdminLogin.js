@@ -15,6 +15,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
       const response = await axios.post('http://localhost:5000/api/login/admin', { username, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);
+      localStorage.setItem('adminEmail', `${response.data.email}`);
       localStorage.setItem('role', 'admin');
       setIsLoggedIn(true);
       navigate('/admin');

@@ -15,6 +15,8 @@ const StudentLogin = ({ setIsLoggedIn }) => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);
       localStorage.setItem('role', 'student');
+      localStorage.setItem('username', response.data.username);
+      localStorage.setItem('rollNumber', response.data.rollNumber);
       setIsLoggedIn(true);
       navigate('/student');
     } catch (err) {

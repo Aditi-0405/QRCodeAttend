@@ -8,6 +8,9 @@ const NavBar = ({isLoggedIn, setIsLoggedIn})=>{
     const handleLogout = () => {
       localStorage.removeItem('userId');
       localStorage.removeItem('role');
+      localStorage.removeItem('username');
+      localStorage.removeItem('rollNumber');
+      localStorage.removeItem('adminEmail')
       setIsLoggedIn(false);
       navigate('/'); 
     };
@@ -21,14 +24,15 @@ const NavBar = ({isLoggedIn, setIsLoggedIn})=>{
           {isLoggedIn && userRole === 'student' && (
             <>
               <li className="nav-item"><Link to="/student" className="nav-link">Home</Link></li>
-              <li className="nav-item"><span className="nav-link">User ID: {localStorage.getItem('userId')}</span></li>
+              <li className="nav-item"><span className="nav-link">Roll Number: {localStorage.getItem('rollNumber')}</span></li>
+              <li className="nav-item"><span className="nav-link">Name: {localStorage.getItem('username')}</span></li>
               <li className="nav-item"><button onClick={handleLogout} className="nav-link logout-btn">Logout</button></li>
             </>
           )}
           {isLoggedIn && userRole === 'admin' && (
             <>
               <li className="nav-item"><Link to="/admin" className="nav-link">Home</Link></li>
-              <li className="nav-item"><span className="nav-link">User ID: {localStorage.getItem('userId')}</span></li>
+              <li className="nav-item"><span className="nav-link">Admin@{localStorage.getItem('adminEmail')}</span></li>
               <li className="nav-item"><button onClick={handleLogout} className="nav-link logout-btn">Logout</button></li>
             </>
           )}

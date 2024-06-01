@@ -1,6 +1,7 @@
 const Attendance = require('../models/Attendance');
 const Admin = require('../models/admin')
 const Student = require('../models/student')
+const {getCurrentCount, incrementCount} = require('../helper/Count')
 const { sendmail } = require('../auth/nodemailer');
 const markAttendance = async (req, res) => {
   try {
@@ -54,9 +55,13 @@ const getAllAttendance = async (req, res) => {
     if (!admin) {
       return res.status(403).json({ message: 'Only admins can access the record' });
     }
-    const attendanceRecord = await Attendance.findOne();
+    let attendanceRecord = await Attendance.findOne();
     if (!attendanceRecord) {
-      return res.status(404).json({ error: 'No attendance records found' });
+      attendanceRecord = new Attendance();
+    }
+
+    if (!attendanceRecord.studentAttendance) {
+      attendanceRecord.studentAttendance = new Map();
     }
     const defaultAttendance = {};
     const today = new Date();
@@ -82,7 +87,7 @@ const getAllAttendance = async (req, res) => {
     const students = await Student.find();
     const attendanceObject = {}
     students.forEach(student => {
-      const studentId = student._id.toString();
+      const studentId = student.rollNumber
       if (!attendanceRecord.studentAttendance.has(studentId)) {
         attendanceObject[studentId] = defaultAttendance
       }
@@ -167,12 +172,13 @@ const createStudent = async (req, res) => {
     if (!admin) {
       return res.status(403).json({ message: 'Only admins can create users' });
     }
+    const studentCount = await getCurrentCount()+1;
+    await incrementCount();
 
-    const newUser = new Student({ username, email, password });
-
+    const newUser = new Student({ username, email, password, rollNumber: studentCount  });
+    await newUser.save();
     await sendmail(username, email, password);
     
-    await newUser.save();
     res.status(201).json({ message: 'User created successfully', newUser });
   } catch (error) {
     console.log(error);
@@ -237,8 +243,19 @@ const getStudentAttendance = async (req, res) => {
     }
 
     let attendanceRecord = await Attendance.findOne();
-    if (!attendanceRecord || !attendanceRecord.studentAttendance) {
-      return res.status(404).json({ message: 'No attendance records found' });
+    if (!attendanceRecord) {
+      attendanceRecord = new Attendance();
+    }
+
+    if (!attendanceRecord.studentAttendance) {
+      attendanceRecord.studentAttendance = new Map();
+    }
+    let studentAttendance = attendanceRecord.studentAttendance.get(studentId);
+
+    if (!studentAttendance) {
+      studentAttendance = [];
+      attendanceRecord.studentAttendance.set(studentId, studentAttendance);
+      studentAttendance = attendanceRecord.studentAttendance.get(studentId);
     }
 
     const defaultAttendance = [];
@@ -258,8 +275,6 @@ const getStudentAttendance = async (req, res) => {
         defaultAttendance.push({ date: currentDay.toISOString().split('T')[0], status: 'absent' });
       }
     }
-
-    const studentAttendance = attendanceRecord.studentAttendance.get(studentId);
     if (studentAttendance) {
       studentAttendance.forEach(record => {
         const recordDate = record.date.toISOString().split('T')[0];
@@ -270,7 +285,7 @@ const getStudentAttendance = async (req, res) => {
       });
     }
 
-    res.status(200).json({ studentName: student.username, attendance: defaultAttendance });
+    res.status(200).json({ studentName: student.username, rollNumber:student.rollNumber, attendance: defaultAttendance });
   } catch (error) {
     console.error('Error fetching attendance:', error);
     res.status(500).json({ error: 'Internal Server Error' });

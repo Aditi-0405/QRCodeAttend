@@ -15,7 +15,7 @@ const GetAllAttendance = () => {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
-
+console.log(response.data)
             if (typeof response.data === 'object' && response.data !== null) {
                 const attendanceArray = Object.entries(response.data).map(([studentId, attendanceObj]) => {
                     return { studentId, ...attendanceObj };
@@ -49,7 +49,7 @@ const GetAllAttendance = () => {
                         <table className="attendance-table">
                             <thead>
                                 <tr>
-                                    <th>Student ID</th>
+                                    <th>Roll Number</th>
                                     {Object.keys(attendanceData[0]).filter(key => key !== 'studentId').map(date => (
                                         <th key={date}>{date}</th>
                                     ))}

@@ -15,6 +15,7 @@ const studentSchema = new mongoose.Schema({
         }
     },
     password: { type: String, required: true },
+    rollNumber: {type: Number, required: true}
 });
 
 studentSchema.pre('save', async function(next) {

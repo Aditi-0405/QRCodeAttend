@@ -6,6 +6,7 @@ const StudentAttendance = () => {
   const { studentId } = useParams();
   const [attendance, setAttendance] = useState([]);
   const [studentName, setStudentName] = useState('');
+  const [studentRollNumber, setStudentRollNumber] = useState('');
 
   useEffect(() => {
     const fetchAttendance = async () => {
@@ -27,6 +28,7 @@ const StudentAttendance = () => {
         console.log(data);
         setAttendance(data.attendance);
         setStudentName(data.studentName);
+        setStudentRollNumber(data.rollNumber)
       } catch (error) {
         console.error('Error fetching attendance:', error);
       }
@@ -43,9 +45,10 @@ const StudentAttendance = () => {
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
       <h1>Student Attendance</h1>
+      <h2>Name : {studentName}</h2>
+      <h2>Roll No : {studentRollNumber}</h2>
       {attendance.length > 0 && (
         <div style={{ marginTop: '20px', display: 'inline-block', textAlign: 'left' }}>
-          <h2>{studentName}'s Weekly Attendance</h2>
           <table className="attendance-table">
             <thead>
               <tr>

@@ -10,6 +10,9 @@ const AdminPage = () => {
       <nav className="admin-nav">
         <ul className="nav-list">
           <li className="nav-item">
+            <button className="nav-button" onClick={() => navigate('/all-students')}>All Students</button>
+          </li>
+          <li className="nav-item">
             <button className="nav-button" onClick={() => navigate('/mark-attendance')}>Mark Attendance</button>
           </li>
           <li className="nav-item">
@@ -17,9 +20,6 @@ const AdminPage = () => {
           </li>
           <li className="nav-item">
             <button className="nav-button" onClick={() => navigate('/update-attendance')}>Update Attendance</button>
-          </li>
-          <li className="nav-item">
-            <button className="nav-button" onClick={() => navigate('/all-students')}>All Students</button>
           </li>
         </ul>
       </nav>

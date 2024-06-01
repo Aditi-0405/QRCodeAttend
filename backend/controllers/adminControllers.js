@@ -90,7 +90,8 @@ const getAllAttendance = async (req, res) => {
     const students = await Student.find();
     const attendanceObject = {}
     students.forEach(student => {
-      const studentId = student.rollNumber
+      const studentId = student._id.toString()
+      console.log(student)
       if (!attendanceRecord.studentAttendance.has(studentId)) {
         attendanceObject[studentId] = defaultAttendance
       }
@@ -100,6 +101,7 @@ const getAllAttendance = async (req, res) => {
         studentAttendance.forEach(record => {
           const recordDate = record.date.toISOString().split('T')[0];
           if (weeklyAttendance.hasOwnProperty(recordDate)) {
+            console.log(record.status)
             weeklyAttendance[recordDate] = record.status;
           }
         });

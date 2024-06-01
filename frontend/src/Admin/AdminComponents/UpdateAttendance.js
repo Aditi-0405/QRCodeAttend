@@ -9,6 +9,7 @@ const UpdateAttendance = () => {
     status: ''
   });
   const [students, setStudents] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -25,6 +26,7 @@ const UpdateAttendance = () => {
           studentsData = [studentsData];
         }
         setStudents(studentsData);
+        setFilteredStudents(studentsData);
       } catch (error) {
         console.error('Error fetching students:', error);
         setError('Error fetching students');
@@ -37,6 +39,14 @@ const UpdateAttendance = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleStudentFilter = (input) => {
+    const filtered = students.filter(student => {
+      return (student.rollNumber.toString().toLowerCase().includes(input.toLowerCase())) ||
+             (student.username.toLowerCase().includes(input.toLowerCase()));
+    });
+    setFilteredStudents(filtered);
   };
 
   const handleSubmit = async (e) => {
@@ -73,10 +83,15 @@ const UpdateAttendance = () => {
       <h2>Update Attendance</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Student ID:</label>
+          <label></label>
+          <input 
+            type="text" 
+            placeholder="Search by roll number or username"
+            onChange={(e) => handleStudentFilter(e.target.value)}
+          />
           <select name="studentId" value={formData.studentId} onChange={handleChange}>
             <option value="">Select student</option>
-            {students.map((student) => (
+            {filteredStudents.map((student) => (
               <option key={student._id} value={student._id}>
                 {student.rollNumber} : {student.username}
               </option>

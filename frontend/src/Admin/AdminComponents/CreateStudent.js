@@ -48,6 +48,8 @@ const CreateStudent = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setError('Unauthorized access. Please log in again.');
+      } else if (error.response && error.response.status === 400 && error.response.data.message === 'Email address is already in use') {
+        setError('Student with the provided email address already exists. Please use a different email.');
       } else {
         setError('Error creating student. Please try again later.');
       }

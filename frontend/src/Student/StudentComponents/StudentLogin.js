@@ -20,7 +20,7 @@ const StudentLogin = ({ setIsLoggedIn }) => {
       setIsLoggedIn(true);
       navigate('/student');
     } catch (err) {
-      if (err.response || err.response.status === 401) {
+      if (err.response && err.response.status === 401) {
         setError('Invalid email or password');
       } else {
         setError('We are currently experiencing technical difficulties. Please try again later.');

@@ -20,7 +20,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
       setIsLoggedIn(true);
       navigate('/admin');
     } catch (err) {
-      if (err.response || err.response.status === 401) {
+      if (err.response && err.response.status === 401) {
         setError('Invalid username or password');
       } else {
         setError('We are currently experiencing technical difficulties. Please try again later.');

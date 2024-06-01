@@ -30,7 +30,7 @@ const StudentLogin = ({ setIsLoggedIn }) => {
 
   return (
     <div className="form-container">
-      <h2>Student Login Page</h2>
+      <h2>Student Login</h2>
       {error && <p className="error-message">{error}</p>}
       <div className="form-group">
         <input

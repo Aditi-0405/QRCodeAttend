@@ -32,8 +32,15 @@ const CreateStudent = () => {
         }
       });
       console.log(response.data)
-      const studentId = response.data.newUser._id;
-      setMessage(`Student with ID ${studentId} created successfully`);
+      const rollNumber = response.data.newUser.rollNumber;
+      const username = response.data.newUser.username;
+      setMessage(
+        <>
+          Student created successfully <br />
+          Roll Number : {rollNumber} <br />
+          Username : {username}
+        </>
+      );
       setError('');
       setTimeout(() => {
         setMessage('');

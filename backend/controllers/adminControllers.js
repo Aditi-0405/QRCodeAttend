@@ -177,7 +177,7 @@ const createStudent = async (req, res) => {
 
     const newUser = new Student({ username, email, password, rollNumber: studentCount  });
     await newUser.save();
-    await sendmail(username, email, password);
+    // await sendmail(username, email, password);
     
     res.status(201).json({ message: 'User created successfully', newUser });
   } catch (error) {

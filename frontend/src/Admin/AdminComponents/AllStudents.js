@@ -66,9 +66,11 @@ const AllStudents = () => {
       <ul className="students-list">
         {students.map((student) => (
           <li key={student._id} className="student-item">
-            <span>{student._id} : {student.username}</span>
-            <button className="see-attendance-button" onClick={() => navigate(`/see-attendance/${student._id}`)}>See Attendance</button>
-            <button className="delete-student-button" onClick={() => confirmDelete(student._id)}>Delete</button>
+            <span>{student.rollNumber} : {student.username}</span>
+            <div >
+              <button className="see-attendance-button" onClick={() => navigate(`/see-attendance/${student._id}`)}>See Attendance</button>
+              <button className="delete-student-button" onClick={() => confirmDelete(student._id)}>Delete</button>
+            </div>
           </li>
         ))}
       </ul>

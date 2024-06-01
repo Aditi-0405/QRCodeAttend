@@ -1,7 +1,7 @@
 const Attendance = require('../models/Attendance');
 const Admin = require('../models/admin')
 const Student = require('../models/student')
-const {getCurrentCount, incrementCount} = require('../helper/Count')
+const { getCurrentCount, incrementCount } = require('../helper/Count')
 const { sendmail } = require('../auth/nodemailer');
 const markAttendance = async (req, res) => {
   try {
@@ -11,37 +11,40 @@ const markAttendance = async (req, res) => {
     if (!admin) {
       return res.status(403).json({ message: 'Not authorized' });
     }
-
-    let attendanceRecord = await Attendance.findOne();
-    if (!attendanceRecord) {
-      attendanceRecord = new Attendance();
+    const student = await Student.findById(studentId);
+    if (!student) {
+      res.status(404).json({ message: 'No student found' });
     }
+    else {
+      let attendanceRecord = await Attendance.findOne();
+      if (!attendanceRecord) {
+        attendanceRecord = new Attendance();
+      }
 
-    if (!attendanceRecord.studentAttendance) {
-      attendanceRecord.studentAttendance = new Map();
+      if (!attendanceRecord.studentAttendance) {
+        attendanceRecord.studentAttendance = new Map();
+      }
+
+      let studentAttendance = attendanceRecord.studentAttendance.get(studentId);
+
+      if (!studentAttendance) {
+        studentAttendance = [];
+        attendanceRecord.studentAttendance.set(studentId, studentAttendance);
+        studentAttendance = attendanceRecord.studentAttendance.get(studentId);
+      }
+
+      const existingRecordIndex = studentAttendance.findIndex(record => record.date.toDateString() === new Date(date).toDateString());
+      if (existingRecordIndex !== -1) {
+        studentAttendance[existingRecordIndex].status = status;
+      } else {
+        studentAttendance.push({ date: new Date(date), status });
+      }
+
+      await attendanceRecord.save();
+      res.status(200).json({ message: 'Attendance marked successfully', student });
     }
-
-    let studentAttendance = attendanceRecord.studentAttendance.get(studentId);
-    if (!studentAttendance) {
-      studentAttendance = [];
-      attendanceRecord.studentAttendance.set(studentId, studentAttendance);
-      studentAttendance = attendanceRecord.studentAttendance.get(studentId);
-    }
-
-    const existingRecordIndex = studentAttendance.findIndex(record => record.date.toDateString() === new Date(date).toDateString());
-    if (existingRecordIndex !== -1) {
-      studentAttendance[existingRecordIndex].status = status;
-    } else {
-      studentAttendance.push({ date: new Date(date), status });
-    }
-
-    await attendanceRecord.save();
-
-    console.log('Attendance marked successfully');
-    console.log('Attendance Record:', attendanceRecord.toObject());
-
-    res.status(200).json({ message: 'Attendance marked successfully' });
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error marking attendance:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -172,13 +175,13 @@ const createStudent = async (req, res) => {
     if (!admin) {
       return res.status(403).json({ message: 'Only admins can create users' });
     }
-    const studentCount = await getCurrentCount()+1;
+    const studentCount = await getCurrentCount() + 1;
     await incrementCount();
 
-    const newUser = new Student({ username, email, password, rollNumber: studentCount  });
+    const newUser = new Student({ username, email, password, rollNumber: studentCount });
     await newUser.save();
     // await sendmail(username, email, password);
-    
+
     res.status(201).json({ message: 'User created successfully', newUser });
   } catch (error) {
     console.log(error);
@@ -195,6 +198,23 @@ const getAllStudents = async (req, res) => {
     }
     const students = await Student.find();
     res.status(200).json({ students });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+const getStudent = async (req, res) => {
+  try {
+    const{studentId} = req.params;
+    const decoded = req.user;
+    const admin = await Admin.findById(decoded.userId);
+
+    if (!admin) {
+      return res.status(403).json({ message: 'Not Authorized' });
+    }
+
+    const student = await Student.findOne({_id: studentId});
+    res.status(200).json({ student });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -285,7 +305,7 @@ const getStudentAttendance = async (req, res) => {
       });
     }
 
-    res.status(200).json({ studentName: student.username, rollNumber:student.rollNumber, attendance: defaultAttendance });
+    res.status(200).json({ studentName: student.username, rollNumber: student.rollNumber, attendance: defaultAttendance });
   } catch (error) {
     console.error('Error fetching attendance:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -295,4 +315,4 @@ const getStudentAttendance = async (req, res) => {
 
 
 
-module.exports = { markAttendance, getAllAttendance, updateAttendance, createStudent, getAllStudents, deleteStudent, getStudentAttendance };
+module.exports = { markAttendance, getAllAttendance, updateAttendance, createStudent, getAllStudents, deleteStudent, getStudentAttendance, getStudent };

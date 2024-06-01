@@ -5,25 +5,79 @@ import '../AdminStyling/MarkAttendance.css';
 
 const MarkAttendance = () => {
   const [attendanceMessage, setAttendanceMessage] = useState('');
-  const [scanningEnabled, setScanningEnabled] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   const scannedStudentIds = [];
 
   const handleScan = async (data) => {
-    if (scanningEnabled && data) {
+    if (data) {
       const { studentId, date } = extractDataFromQR(data);
+      let response
+      let username
+      let rollNumber
+      let student
+      try {
+        response = await axios.get(
+          `http://localhost:5000/api/admin/getStudent/${studentId}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        );
+        console.log(response)
+        student = response.data.student
+        console.log(student)
+        if(student) rollNumber = student.rollNumber
+        if(student) username = student.username
+      } catch (error) {
+        throw error;
+      }
+
       if (studentId && date) {
-        if (!scannedStudentIds.includes(studentId)) {
+        if(!student){
+            setErrorMessage(
+              <>Student record not Found</>
+            );
+            setTimeout(() => {
+              setErrorMessage('');
+            }, 5000);
+        }
+        else if (!scannedStudentIds.includes(studentId)) {
           scannedStudentIds.push(studentId);
           try {
             await markAttendance(studentId, date);
-            setAttendanceMessage(`Attendance marked successfully for student ID: ${studentId}`);
-            setScanningEnabled(false);
-            setTimeout(() => setScanningEnabled(true), 5000);
+            setErrorMessage('')
+            setAttendanceMessage(
+              <>
+                Attendance marked successfully for <br />
+                {rollNumber}@{username}</>
+            );
+            setTimeout(() => {
+              setAttendanceMessage('');
+            }, 5000);
           } catch (error) {
-            console.error('Error marking attendance:', error);
+            setAttendanceMessage('')
+              setErrorMessage(
+                <>
+                 ' Error Marking Attendance'
+                </>
+              );
+            setTimeout(() => {
+              setAttendanceMessage('');
+            }, 5000);
+
           }
-        } else {
-          setAttendanceMessage(`Student ID ${studentId} already scanned`);
+        }
+        else { 
+          setErrorMessage('')
+          setAttendanceMessage(
+            <>
+              Attendance already marked successfully for <br />
+              {rollNumber}@{username}</>
+          );
+          setTimeout(() => {
+            setAttendanceMessage('');
+          }, 5000);
         }
       }
     }
@@ -47,7 +101,7 @@ const MarkAttendance = () => {
 
   const markAttendance = async (studentId, date) => {
     try {
-      await axios.post(
+      const response = await axios.post(
         'http://localhost:5000/api/admin/markAttendance',
         { studentId, date, status: 'present' },
         {
@@ -56,6 +110,7 @@ const MarkAttendance = () => {
           }
         }
       );
+      return response;
     } catch (error) {
       throw error;
     }
@@ -73,6 +128,7 @@ const MarkAttendance = () => {
         />
       </div>
       {attendanceMessage && <p className="attendance-message">{attendanceMessage}</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   );
 };

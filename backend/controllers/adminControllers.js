@@ -91,7 +91,6 @@ const getAllAttendance = async (req, res) => {
     const attendanceObject = {}
     students.forEach(student => {
       const studentId = student._id.toString()
-      console.log(student)
       if (!attendanceRecord.studentAttendance.has(studentId)) {
         attendanceObject[studentId] = defaultAttendance
       }

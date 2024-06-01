@@ -66,3 +66,43 @@
 .absent{
   background-color: red;
 }
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.attendance-table th, .attendance-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.attendance-table th {
+  background-color: #f2f2f2;
+}
+
+.toggle-icon {
+  cursor: pointer;
+  position: relative;
+  margin-left: 10px;
+}
+
+.toggle-icon::after {
+  content: attr(data-next-status);
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.toggle-icon:hover::after {
+  opacity: 1;
+}

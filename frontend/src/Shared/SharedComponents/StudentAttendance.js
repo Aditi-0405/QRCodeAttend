@@ -13,7 +13,7 @@ const StudentAttendance = () => {
     const fetchAttendance = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch(`http://localhost:5000/api/admin/getStudentAttendance/${studentId}`, {
+        const response = await fetch(`http://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/getStudentAttendance/${studentId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const StudentAttendance = () => {
     const newStatus = record.status === 'present' ? 'absent' : 'present';
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/updateAttendance`, {
+      const response = await fetch(`http://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/updateAttendance`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

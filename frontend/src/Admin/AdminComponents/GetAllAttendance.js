@@ -10,7 +10,7 @@ const GetAllAttendance = () => {
     const fetchAttendanceData = async () => {
         setError('');
         try {
-            const response = await axios.get('https://qrcodeattend-backend.onrender.com/api/admin/getAllAttendance', {
+            const response = await axios.get(`https://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/getAllAttendance`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }

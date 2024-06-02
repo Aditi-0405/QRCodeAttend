@@ -26,7 +26,7 @@ const StudentPage = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get(`https://qrcodeattend-backend.onrender.com/api/student/getWeeklyAttendance`, {
+      const response = await axios.get(`https://${process.env.REACT_APP_BACKEND_BASE_URL}/api/student/getWeeklyAttendance`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

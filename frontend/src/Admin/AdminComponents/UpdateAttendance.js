@@ -18,7 +18,7 @@ const UpdateAttendance = () => {
     const fetchStudents = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('https://qrcodeattend-backend.onrender.com/api/admin/getAllStudents', {
+        const response = await axios.get(`https://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/getAllStudents`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -57,7 +57,7 @@ const UpdateAttendance = () => {
     e.preventDefault();
     setLoading(true); 
     try {
-      const response = await axios.patch('https://qrcodeattend-backend.onrender.com/api/admin/updateAttendance', formData, {
+      const response = await axios.patch(`https://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/updateAttendance`, formData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

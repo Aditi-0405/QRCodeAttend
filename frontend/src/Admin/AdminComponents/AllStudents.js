@@ -12,7 +12,7 @@ const AllStudents = () => {
     const fetchStudents = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await fetch('https://qrcodeattend-backend.onrender.com/api/admin/getAllStudents', {
+        const response = await fetch(`https://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/getAllStudents`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ const AllStudents = () => {
   const handleDelete = async (studentId) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`https://qrcodeattend-backend.onrender.com/api/admin/deleteStudent/${studentId}`, {
+      const response = await fetch(`https://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/deleteStudent/${studentId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -81,7 +81,7 @@ const MarkAttendance = () => {
   const fetchStudent = async (studentId) => {
     try {
       const response = await axios.get(
-        `https://qrcodeattend-backend.onrender.com/api/admin/getStudent/${studentId}`,
+        `https://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/getStudent/${studentId}`,
         {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -97,7 +97,7 @@ const MarkAttendance = () => {
   const markAttendance = async (studentId, date) => {
     try {
       await axios.post(
-        'https://qrcodeattend-backend.onrender.com/api/admin/markAttendance',
+        `https://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/markAttendance`,
         { studentId, date, status: 'present' },
         {
           headers: {

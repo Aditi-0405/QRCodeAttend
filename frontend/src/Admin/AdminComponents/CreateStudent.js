@@ -26,7 +26,7 @@ const CreateStudent = () => {
     }
 
     try {
-      const response = await axios.post('https://qrcodeattend-backend.onrender.com/api/admin/createStudent', formData, {
+      const response = await axios.post(`https://${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/createStudent`, formData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

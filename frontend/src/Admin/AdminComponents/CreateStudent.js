@@ -26,7 +26,7 @@ const CreateStudent = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/api/admin/createStudent', formData, {
+      const response = await axios.post('https://qrcodeattend-backend.onrender.com/api/admin/createStudent', formData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

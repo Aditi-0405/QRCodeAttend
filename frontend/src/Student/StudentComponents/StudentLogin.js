@@ -11,7 +11,7 @@ const StudentLogin = ({ setIsLoggedIn }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login/student', { email, password });
+      const response = await axios.post('https://qrcodeattend-backend.onrender.com/api/login/student', { email, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);
       localStorage.setItem('role', 'student');

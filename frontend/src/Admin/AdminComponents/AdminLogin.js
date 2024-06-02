@@ -12,7 +12,7 @@ const AdminLogin = ({ setIsLoggedIn }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login/admin', { username, password });
+      const response = await axios.post('https://qrcodeattend-backend.onrender.com/api/login/admin', { username, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userId', response.data.userId);
       localStorage.setItem('adminEmail', `${response.data.email}`);
